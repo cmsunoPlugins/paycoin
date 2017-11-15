@@ -6,6 +6,7 @@ BLOCKONOMICS CALLBACK VAR :
     * value is the recevied payment amount in satoshis
     * txid is the id of the paying transaction
 */
+if(!isset($_REQUEST['status']) || empty($_REQUEST['addr']) || empty($_REQUEST['value']) || empty($_REQUEST['txid'])) return;
 include(dirname(__FILE__).'/../../config.php');
 if(file_exists(dirname(__FILE__).'/../../data/_sdata-'.$sdata.'/ssite.json'))
 	{
@@ -19,12 +20,38 @@ $q = file_get_contents(dirname(__FILE__).'/../../data/_sdata-'.$sdata.'/paycoin.
 $a = json_decode($q,true);
 if($a && !empty($_REQUEST['txid']) && !empty($_REQUEST['secret']) && $_REQUEST['secret']==$a['secret'])
 	{
-	include(dirname(__FILE__).'/lang/lang.php');
-	if($_REQUEST['status']==2 && VerifADDR($_REQUEST['addr'],$sdata))
+	// lang
+	if(file_exists(dirname(__FILE__).'/../../data/_sdata-'.$sdata.'/users.json'))
 		{
+		$q = file_get_contents(dirname(__FILE__).'/../../data/_sdata-'.$sdata.'/users.json');
+		$a = json_decode($q,true);
+		if(!empty($a['g'])) $lang = $a['g'];
+		}
+	include(dirname(__FILE__).'/lang/lang.php');
+	//
+	if(file_exists(dirname(__FILE__).'/../../data/_sdata-'.$sdata.'/_paycoin/tmp/cart'.$_REQUEST['addr'].'.json'))
+		{
+		if(VerifTXID($_REQUEST['txid'],$sdata)) return; // TXID already exists
 		$q = file_get_contents(dirname(__FILE__).'/../../data/_sdata-'.$sdata.'/_paycoin/tmp/cart'.$_REQUEST['addr'].'.json');
 		$c = json_decode($q,true);
+		$c['txid'] = $_REQUEST['txid'];
+		$c['time'] = time();
+		$c['status'] = $_REQUEST['status'];
+		$c['gateway'] = 'Blockonomics';
+		$c['treated'] = 0;
+		file_put_contents(dirname(__FILE__).'/../../data/_sdata-'.$sdata.'/_paycoin/paycoin'.$_REQUEST['txid'].'.json',json_encode($c));
+		if(isset($c['mail'])) file_put_contents(dirname(__FILE__).'/../../data/_sdata-'.$sdata.'/_paycoin/tmp/mail'.base64_encode($c['mail']).'.txt',$_REQUEST['txid']);
+		unlink(dirname(__FILE__).'/../../data/_sdata-'.$sdata.'/_paycoin/tmp/cart'.$_REQUEST['addr'].'.json');
+		}
+	if($_REQUEST['status']==2 && VerifTXID($_REQUEST['txid'],$sdata))
+		{
+		if(empty($c))
+			{
+			$q = file_get_contents(dirname(__FILE__).'/../../data/_sdata-'.$sdata.'/_paycoin/paycoin'.$_REQUEST['txid'].'.json');
+			$c = json_decode($q,true);
+			}
 		if(empty($c['price']) || $c['price']!=$_REQUEST['value']) return;
+		if($c['status']==2) return; // already treated
 		if(!empty($c['digital']))
 			{
 			/*
@@ -116,24 +143,15 @@ if($a && !empty($_REQUEST['txid']) && !empty($_REQUEST['secret']) && $_REQUEST['
 			// MAIL ADMIN PAYMENT
 			mailAdmin('Paycoin - '.T_('Payment receipt').' : '.$c['price'].' BTC', $msg, $bottom, $top, $b2['url']);
 			}
-		$c['txid'] = $_REQUEST['txid'];
 		$c['time'] = time();
 		$c['status'] = 2;
-		$c['gateway'] = 'Blockonomics';
-		$c['treated'] = 0;
-		file_put_contents(dirname(__FILE__).'/../../data/_sdata-'.$sdata.'/_paycoin/tmp/cart'.$_REQUEST['addr'].'.json',json_encode($c));
-		copy(dirname(__FILE__).'/../../data/_sdata-'.$sdata.'/_paycoin/tmp/cart'.$_REQUEST['addr'].'.json', dirname(__FILE__).'/../../data/_sdata-'.$sdata.'/_paycoin/paycoin'.$_REQUEST['txid'].'.json');
+		file_put_contents(dirname(__FILE__).'/../../data/_sdata-'.$sdata.'/_paycoin/paycoin'.$_REQUEST['txid'].'.json',json_encode($c));
 		}
 	}
 //
-function VerifADDR($addr, $sdata)
-	{ // Cart exists ?
-	$a = array();
-	if($h=opendir(dirname(__FILE__).'/../../data/_sdata-'.$sdata.'/_paycoin/tmp/'))
-		{
-		while(($file=readdir($h))!==false) { if($file=='cart'.$addr.'.json') {closedir($h); return 1;}}
-		closedir($h);
-		}
+function VerifTXID($txid, $sdata)
+	{ // TXID exists ?
+	if(file_exists(dirname(__FILE__).'/../../data/_sdata-'.$sdata.'/_paycoin/paycoin'.$txid.'.json')) return 1;
 	return 0;
 	}
 //

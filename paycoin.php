@@ -30,6 +30,11 @@ if (isset($_POST['action']))
 				<h3><?php echo T_("Default Settings");?> :</h3>
 				<table class="hForm">
 					<tr>
+						<td><label><?php echo T_("Activate");?></label></td>
+						<td><input type="checkbox" class="input" name="activ" id="activ" /></td>
+						<td><em><?php echo T_("Enable the payment with Bitcoin");?></em></td>
+					</tr>
+					<tr>
 						<td><label><?php echo T_("API key");?></label></td>
 						<td><input type="text" class="input" name="paycoinKey" id="paycoinKey" style="width:300px;" /></td>
 						<td><em><?php echo T_("Blockonomics API key generated from Wallet Watcher > Settings.");?></em></td>
@@ -66,6 +71,14 @@ if (isset($_POST['action']))
 			{
 			$q = file_get_contents('../../data/_sdata-'.$sdata.'/paycoin.json');
 			if($q) $a = json_decode($q,true);
+			}
+		$a['act'] = $_POST['act'];
+		if(file_exists('../../data/payment.json'))
+			{
+			$q = file_get_contents('../../data/payment.json'); $b = json_decode($q,true);
+			if(empty($b['method'])) $b['method'] = array();
+			$b['method']['paycoin'] = $_POST['act'];
+			file_put_contents('../../data/payment.json',json_encode($b));
 			}
 		$a['key'] = $_POST['key'];
 		$a['url'] = substr($_SERVER['HTTP_REFERER'],0,-4).'/plugins/paycoin/callback.php';
@@ -110,7 +123,10 @@ if (isset($_POST['action']))
 				{
 				if($r)
 					{
-					$item = ''; $typ = 'Pay';
+					$item = '';
+					$st = (isset($r['status'])?$r['status']:0);
+					if($st==2) $typ = T_("Paid");
+					else $typ = T_("Uncertain");
 					if(!empty($r['digital'])) $typ .= '<br />(Digital)';
 					echo '<tr'.($r['treated']?' class="PaycoinTreatedYes"':'').'>';
 					echo '<td>'.(isset($r['time'])?date("dMy H:i", $r['time']):'').'<br /><span style="font-size:.8em;text-decoration:underline;cursor:pointer;" onClick="f_paycoinDetail(\''.$r['txid'].'\')">'.$r['txid'].'</span></td>';

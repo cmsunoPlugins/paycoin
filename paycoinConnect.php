@@ -1,6 +1,12 @@
 <?php
 if(!isset($_SERVER['HTTP_X_REQUESTED_WITH']) || strtolower($_SERVER['HTTP_X_REQUESTED_WITH'])!='xmlhttprequest') {sleep(2);exit;} // ajax request
 include('../../config.php'); // $sdata;
+if(file_exists(dirname(__FILE__).'/../../data/_sdata-'.$sdata.'/users.json'))
+	{
+	$q = file_get_contents(dirname(__FILE__).'/../../data/_sdata-'.$sdata.'/users.json');
+	$a = json_decode($q,true);
+	if(!empty($a['g'])) $lang = $a['g'];
+	}
 include('lang/lang.php');
 // ***** ACTION : URL *******************
 if (isset($_POST['action']))
@@ -30,7 +36,7 @@ if (isset($_POST['action']))
 		$key = (!empty($b['key'])?$b['key']:0);
 		$round = (!empty($b['round'])?$b['round']:6);
 		$c = array();
-		$c['address'] = blockonomics_get_new_adress($key,$secret,$reset);
+		$c['address'] = blockonomics_get_new_adress($sdata,$key,$secret,$reset);
 		$c['rate'] = blockonomics_get_rate('EUR');
 		$c['price'] = number_format($amo/$c['rate']+pow(.1,$round+1),$round,'.',''); // 1 satoshi = 0.00000001 BTC
 		$c['lang'] = array(
@@ -40,7 +46,8 @@ if (isset($_POST['action']))
 			'amo'=>T_('Amount'),
 			'info1'=>T_('Copy the address or use the QRcode.'),
 			'info2'=>T_('If you send another bitcoin amount, payment system will ignore you !'),
-			'info3'=>T_('The check of the transaction can take a few minutes. Keep this window open.')
+			'info3'=>T_('The check of the transaction can take a few minutes. Keep this window open.'),
+			'off'=>T_('Service temporarily unavailable')
 			);
 		$c['t'] = time();
 		$out = json_encode($c);
@@ -58,34 +65,52 @@ if (isset($_POST['action']))
 		// ******************************************************
 		case 'check':
 		$adr = strip_tags($_POST['adr']);
-		$o = 'no';
+		$mel = base64_encode($_POST['mail']);
 		if(file_exists(dirname(__FILE__).'/../../data/_sdata-'.$sdata.'/_paycoin/tmp/cart'.$adr.'.json'))
 			{
-			$q = file_get_contents(dirname(__FILE__).'/../../data/_sdata-'.$sdata.'/_paycoin/tmp/cart'.$adr.'.json'); $a = json_decode($q,true);
-			if(!empty($a['status']) && $a['status']==2)
+			echo 'no';
+			return;
+			}
+		else if(file_exists(dirname(__FILE__).'/../../data/_sdata-'.$sdata.'/_paycoin/tmp/mail'.$mel.'.txt'))
+			{
+			$txid = file_get_contents(dirname(__FILE__).'/../../data/_sdata-'.$sdata.'/_paycoin/tmp/mail'.$mel.'.txt');
+			if(file_exists(dirname(__FILE__).'/../../data/_sdata-'.$sdata.'/_paycoin/paycoin'.$txid.'.json'))
 				{
-				$o = 'ok';
-				unlink(dirname(__FILE__).'/../../data/_sdata-'.$sdata.'/_paycoin/tmp/cart'.$adr.'.json');
-				if(!empty($a['Ubusy']))
+				$q = file_get_contents(dirname(__FILE__).'/../../data/_sdata-'.$sdata.'/_paycoin/paycoin'.$txid.'.json');
+				$a = json_decode($q,true);
+				if(!empty($a['status']) && $a['status']==2)
 					{
-					$busy = $a['Ubusy'];
-					$q = file_get_contents(dirname(__FILE__).'/../../data/'.$busy.'/site.json'); $b = json_decode($q,true);
-					if(!empty($b['url']))
+					$o = 'ok';
+					unlink(dirname(__FILE__).'/../../data/_sdata-'.$sdata.'/_paycoin/tmp/mail'.$mel.'.txt');
+					if(!empty($a['Ubusy']))
 						{
-						$o .= $b['url'].'?paycoin=ok';
-						if(!empty($a['digital'])) $o .= '&digit='.$a['digital'];
+						$busy = $a['Ubusy'];
+						$q = file_get_contents(dirname(__FILE__).'/../../data/'.$busy.'/site.json'); $b = json_decode($q,true);
+						if(!empty($b['url']))
+							{
+							$o .= $b['url'].'?paycoin=ok';
+							if(!empty($a['digital'])) $o .= '&digit='.$a['digital'];
+							}
 						}
+					echo $o;
+					return;
+					}
+				else
+					{
+					echo 'nc'; // not confirmed
+					return;
 					}
 				}
 			}
-		echo $o;
+		echo 'no';
 		break;
 		// ******************************************************
 		}
 	}
-function blockonomics_get_new_adress($key,$secret,$reset=0)
+function blockonomics_get_new_adress($sdata,$key,$secret,$reset=0)
 	{
 	// return '189CEMECgP36iXpCKQoBbRQn3dTCUPi5dm';
+	if(paycoin_count_tmp($sdata)>18) return 0;
 	$opt = array('http'=>array(
 		'header'=>'Authorization: Bearer '.$key,
 		'method'=>'POST',
@@ -102,7 +127,7 @@ function blockonomics_get_new_adress($key,$secret,$reset=0)
 	}
 function blockonomics_get_rate($currency) // Exchange rate - EUR, GBP, USD ...
 	{
-	// return '6420.61';
+	// return '6421.61';
 	$opt = array('http'=>array('method' =>'GET'));
 	$context = stream_context_create($opt);
 	$q = @file_get_contents('https://www.blockonomics.co/api/price?currency='.$currency, false, $context);
@@ -112,27 +137,39 @@ function blockonomics_get_rate($currency) // Exchange rate - EUR, GBP, USD ...
 		return number_format($out->price,8,'.','');
 		}
 	}
-function paycoin_del_tmp($sdata,$delay=172800) // 48h
+function paycoin_del_tmp($sdata,$delay=14400) // delay : 4h
 	{
 	$d = dirname(__FILE__).'/../../data/_sdata-'.$sdata.'/_paycoin/tmp/';
 	$h = @opendir($d);
 	$reset = 1;
-	$c = 0;
 	if($h)
 		{
 		while(($f=readdir($h))!==false)
 			{
 			if($f=='.' || $f=='..') continue;
-			if(is_file($d.$f) && substr($f,0,4)=='cart')
+			if(is_file($d.$f))
 				{
-				++$c;
-				if(filemtime($d.$f)>time()-7200) $reset = 0; // < 2h
+				if(substr($f,0,4)=='cart' && filemtime($d.$f)>time()-$delay) $reset = 0; // < 4h
 				if(filemtime($d.$f)<time()-$delay) @unlink($d.$f);
 				}
 			}
-		if($c>47) $reset = 1;
 		@closedir($h);
 		}
 	return $reset;
+	}
+function paycoin_count_tmp($sdata)
+	{
+	$d = dirname(__FILE__).'/../../data/_sdata-'.$sdata.'/_paycoin/tmp/';
+	$h = @opendir($d);
+	$c = 0;
+	if($h)
+		{
+		while(($f=readdir($h))!==false)
+			{
+			if($f!='.' && $f!='..' && is_file($d.$f) && substr($f,0,4)=='cart') ++$c;
+			}
+		@closedir($h);
+		}
+	return $c;
 	}
 ?>

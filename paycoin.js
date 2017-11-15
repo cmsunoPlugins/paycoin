@@ -4,8 +4,9 @@
 //
 function f_save_paycoin(){
 	jQuery(document).ready(function(){
+		var act=document.getElementById('activ').checked?1:0;
 		var key=document.getElementById("paycoinKey").value;
-		jQuery.post('uno/plugins/paycoin/paycoin.php',{'action':'save','unox':Unox,'key':key},function(r){
+		jQuery.post('uno/plugins/paycoin/paycoin.php',{'action':'save','unox':Unox,'act':act,'key':key},function(r){
 			f_alert(r);
 		});
 	});
@@ -13,6 +14,7 @@ function f_save_paycoin(){
 function f_load_paycoin(){
 	jQuery(document).ready(function(){
 		jQuery.ajax({type:'POST',url:'uno/plugins/paycoin/paycoin.php',data:{'action':'load','unox':Unox},dataType:'json',async:true,success:function(r){
+			if(r.act!=undefined&&r.act==1)document.getElementById('activ').checked=true;else document.getElementById('activ').checked=false;
 			if(r.key!=undefined)document.getElementById('paycoinKey').value=r.key;
 			if(r.secret!=undefined)document.getElementById('paycoinSec').innerHTML+=r.secret;
 		}});

@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: CmsUno\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-10 10:05+0100\n"
-"PO-Revision-Date: 2017-11-10 10:46+0100\n"
+"POT-Creation-Date: 2017-11-15 10:17+0100\n"
+"PO-Revision-Date: 2017-11-15 10:18+0100\n"
 "Last-Translator: jacques Malgrange <contacter@boiteasite.fr>\n"
 "Language-Team: Jacques Malgrange <contacter@boiteasite.fr>\n"
 "Language: es_ES\n"
@@ -18,52 +18,52 @@ msgstr ""
 "X-Generator: Poedit 1.8.12\n"
 "X-Poedit-SearchPath-0: ../../..\n"
 
-#: ../../../callback.php:61
+#: ../../../callback.php:88
 msgid "Thank you for your trust, see you soon!"
 msgstr "Gracias por su confianza, nos vemos pronto!"
 
-#: ../../../callback.php:95
+#: ../../../callback.php:122
 msgid "Total"
 msgstr "Total"
 
-#: ../../../callback.php:97
+#: ../../../callback.php:124
 msgid "Paid by Paycoin"
 msgstr "Pagado por Paycoin"
 
-#: ../../../callback.php:97 ../../../paycoin.php:99
+#: ../../../callback.php:124 ../../../paycoin.php:112
 msgid "Name"
 msgstr "Nombre"
 
-#: ../../../callback.php:97 ../../../paycoin.php:99
-#: ../../../paycoinConnect.php:39
+#: ../../../callback.php:124 ../../../paycoin.php:112
+#: ../../../paycoinConnect.php:45
 msgid "Address"
 msgstr "Dirección"
 
-#: ../../../callback.php:97
+#: ../../../callback.php:124
 msgid "Mail"
 msgstr "Mail"
 
-#: ../../../callback.php:101
+#: ../../../callback.php:128
 msgid "New order by Paycoin"
 msgstr "Nuevo orden de Paycoin"
 
-#: ../../../callback.php:105
+#: ../../../callback.php:132
 msgid "Follow the evolution of your order"
 msgstr "Siga la evolución de su pedido"
 
-#: ../../../callback.php:106
+#: ../../../callback.php:133
 msgid "Thank you for your trust."
 msgstr "Gracias por tu confianza."
 
-#: ../../../callback.php:107
+#: ../../../callback.php:134
 msgid "Order"
 msgstr "Pedido"
 
-#: ../../../callback.php:117
+#: ../../../callback.php:144
 msgid "Payment receipt"
 msgstr "Pago recibido"
 
-#: ../../../paycoin.php:20 ../../../paycoin.php:217
+#: ../../../paycoin.php:20 ../../../paycoin.php:233
 msgid "Archives"
 msgstr "Archivos"
 
@@ -83,7 +83,7 @@ msgstr "Lista de ventas"
 msgid "Sales"
 msgstr "Ventas"
 
-#: ../../../paycoin.php:23 ../../../paycoin.php:231
+#: ../../../paycoin.php:23 ../../../paycoin.php:247
 msgid "Payment Details"
 msgstr "Detalles del pago"
 
@@ -92,8 +92,10 @@ msgid "Paycoin"
 msgstr "Paycoin"
 
 #: ../../../paycoin.php:27
-msgid "Accept easily Bitcoin payments in any wallet with the blockonomics gateway."
-msgstr "Acepte pagos de Bitcoin fácilmente en cualquier billetera con Blockonomics."
+msgid ""
+"Accept easily Bitcoin payments in any wallet with the blockonomics gateway."
+msgstr ""
+"Acepte pagos de Bitcoin fácilmente en cualquier billetera con Blockonomics."
 
 #: ../../../paycoin.php:28
 msgid "Create your free account on"
@@ -108,133 +110,158 @@ msgid "Default Settings"
 msgstr "Configuraciones por defecto"
 
 #: ../../../paycoin.php:33
+msgid "Activate"
+msgstr "Activar"
+
+#: ../../../paycoin.php:35
+msgid "Enable the payment with Bitcoin"
+msgstr "Activar el pago con Bitcoin"
+
+#: ../../../paycoin.php:38
 msgid "API key"
 msgstr "Clave API"
 
-#: ../../../paycoin.php:35
+#: ../../../paycoin.php:40
 msgid "Blockonomics API key generated from Wallet Watcher > Settings."
-msgstr "Clave de la API de Blockonomics generada a partir de \"Wallet Watcher> Configuración\"."
+msgstr ""
+"Clave de la API de Blockonomics generada a partir de \"Wallet Watcher> "
+"Configuración\"."
 
-#: ../../../paycoin.php:38
+#: ../../../paycoin.php:43
 msgid "Callback URL"
 msgstr "Callback URL"
 
-#: ../../../paycoin.php:40
+#: ../../../paycoin.php:45
 msgid "Copy this url and set it in your Blockonomics account > Merchants"
 msgstr "Copie esta URL y configúrela en su cuenta > comercial de Blockonomics."
 
-#: ../../../paycoin.php:44
+#: ../../../paycoin.php:49
 msgid "Save settings"
 msgstr "Guardar ajustes"
 
-#: ../../../paycoin.php:44
+#: ../../../paycoin.php:49
 msgid "Save"
 msgstr "Guardar"
 
-#: ../../../paycoin.php:76
+#: ../../../paycoin.php:89
 msgid "Setup OK"
 msgstr "Configuración OK"
 
-#: ../../../paycoin.php:77
+#: ../../../paycoin.php:90
 msgid "Impossible setup"
 msgstr "Configuración Imposible"
 
-#: ../../../paycoin.php:81
+#: ../../../paycoin.php:94
 msgid "List of the Paycoin payments"
 msgstr "Lista de los pagos de Paycoin"
 
-#: ../../../paycoin.php:99
+#: ../../../paycoin.php:112
 msgid "Date"
 msgstr "Fecha"
 
-#: ../../../paycoin.php:99
+#: ../../../paycoin.php:112
 msgid "Type"
 msgstr "Tipos"
 
-#: ../../../paycoin.php:99
+#: ../../../paycoin.php:112
 msgid "Article"
 msgstr "Artículo"
 
-#: ../../../paycoin.php:99
+#: ../../../paycoin.php:112
 msgid "Price"
 msgstr "Precio"
 
-#: ../../../paycoin.php:99 ../../../paycoin.php:141
+#: ../../../paycoin.php:112 ../../../paycoin.php:157
 msgid "Treated"
 msgstr "Tratada"
 
-#: ../../../paycoin.php:99
+#: ../../../paycoin.php:112
 msgid "Del"
 msgstr "Supr"
 
-#: ../../../paycoin.php:99 ../../../paycoin.php:238
+#: ../../../paycoin.php:112 ../../../paycoin.php:254
 msgid "Archive"
 msgstr "Archivo"
 
-#: ../../../paycoin.php:122
+#: ../../../paycoin.php:128
+msgid "Paid"
+msgstr "Pagado"
+
+#: ../../../paycoin.php:129
+msgid "Uncertain"
+msgstr "Incierto"
+
+#: ../../../paycoin.php:138
 msgid "Yes"
 msgstr "Sí"
 
-#: ../../../paycoin.php:122
+#: ../../../paycoin.php:138
 msgid "No"
 msgstr "No"
 
-#: ../../../paycoin.php:124 ../../../paycoin.php:238
+#: ../../../paycoin.php:140 ../../../paycoin.php:254
 msgid "Are you sure ?"
 msgstr "¿Seguro?"
 
-#: ../../../paycoin.php:145 ../../../paycoin.php:154 ../../../paycoin.php:170
-#: ../../../paycoin.php:242
+#: ../../../paycoin.php:161 ../../../paycoin.php:170 ../../../paycoin.php:186
+#: ../../../paycoin.php:258
 msgid "Error"
 msgstr "Error"
 
-#: ../../../paycoin.php:153
+#: ../../../paycoin.php:169
 msgid "Restored"
 msgstr "Restaurada"
 
-#: ../../../paycoin.php:169
+#: ../../../paycoin.php:185
 msgid "Archived"
 msgstr "Archivado"
 
-#: ../../../paycoin.php:223
+#: ../../../paycoin.php:239
 msgid "Restore"
 msgstr "Restaurar"
 
-#: ../../../paycoinConnect.php:13
+#: ../../../paycoinConnect.php:19
 msgid "Your email is required to get the download link"
 msgstr "Su email es requerido para obtener el enlace de descarga"
 
-#: ../../../paycoinConnect.php:14
+#: ../../../paycoinConnect.php:20
 msgid "Email"
 msgstr "E-mail"
 
-#: ../../../paycoinConnect.php:15
+#: ../../../paycoinConnect.php:21
 msgid "Send"
 msgstr "Enviar"
 
-#: ../../../paycoinConnect.php:37
+#: ../../../paycoinConnect.php:43
 msgid "Bitcoin Payment"
 msgstr "Pago Bitcoin"
 
-#: ../../../paycoinConnect.php:38
+#: ../../../paycoinConnect.php:44
 msgid "Send the exact amount at the following address"
 msgstr "Envíe el monto exacto a la siguiente dirección"
 
-#: ../../../paycoinConnect.php:40
+#: ../../../paycoinConnect.php:46
 msgid "Amount"
 msgstr "Suma"
 
-#: ../../../paycoinConnect.php:41
+#: ../../../paycoinConnect.php:47
 msgid "Copy the address or use the QRcode."
 msgstr "Copie la dirección o use QRcode."
 
-#: ../../../paycoinConnect.php:42
+#: ../../../paycoinConnect.php:48
 msgid "If you send another bitcoin amount, payment system will ignore you !"
 msgstr "Si envía otra suma de bitcoin, ¡el sistema de pago lo ignorará!"
 
-#: ../../../paycoinConnect.php:43
-msgid "The check of the transaction can take a few minutes. Keep this window open."
-msgstr "El control de la transacción puede tomar unos minutos. Mantenga esta ventana abierta."
+#: ../../../paycoinConnect.php:49
+msgid ""
+"The check of the transaction can take a few minutes. Keep this window open."
+msgstr ""
+"El control de la transacción puede tomar unos minutos. Mantenga esta ventana "
+"abierta."
+
+#: ../../../paycoinConnect.php:50
+msgid "Service temporarily unavailable"
+msgstr "Servicio temporalmente no disponible"
 
 #: ../../../paycoinMake.php:16
 msgid "Thank you for your payment"

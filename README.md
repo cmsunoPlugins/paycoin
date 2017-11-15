@@ -30,4 +30,5 @@ Works also with digital goods and cart plugin.
 
 ### Versions ###
 
+* 1.1 - 15/11/2017 : Payment plugin Update
 * 1.0 - 10/11/2017 : First stable version
