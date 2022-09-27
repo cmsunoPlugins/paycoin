@@ -109,7 +109,7 @@ if (isset($_POST['action']))
 		if(count($tab))
 			{
 			echo '<br /><table>';
-			echo '<tr><th>'.T_("Date").'</th><th>'.T_("Type").'</th><th>'.T_("Name").'</th><th>'.T_("Address").'</th><th>'.T_("Article").'</th><th>'.T_("Price").'</th><th>'.T_("Treated").'</th><th>'.T_("Del").'</th><th>'.T_("Archive").'</th></tr>';
+			echo '<tr><th>'.T_("Date").'</th><th>'.T_("Type").'</th><th>'.T_("Name").'</th><th>'.T_("Address").'</th><th>'.T_("Article").'</th><th>'.T_("Price").'</th><th>'.T_("Treated").'</th><th>('.T_("Del").')</th><th>'.T_("Archive").'</th></tr>';
 			$b = array();
 			foreach($tab as $r)
 				{
